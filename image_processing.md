@@ -1,4 +1,8 @@
-# Adapt toward torchvision v2 
+# List of coding practice that speedups image processing workflow:
+- [ ] Use Dataset.map(batched=True). See performance boost [here](https://huggingface.co/learn/nlp-course/en/chapter5/3?fw=pt#the-map-methods-superpowers) (0scroll down to see table). But you need to use num_proc and set batched=True in map(), otherwise it will be slower than default set_transform() [as reported here](https://discuss.huggingface.co/t/using-map-take-7-2x-times-longer-than-set-transform/62285).
+- [ ] Modify your transforms.Compose to use torchvision v2 instead of torchvision v1.
+  
+# Why adapt toward torchvision v2 
 - Based on two most popular Vision Transformer implementations: [HuggingFace's implementation](https://github.com/huggingface/transformers/blob/v4.49.0/src/transformers/models/vit/image_processing_vit.py#L152-L283) and [Timm's implementation](https://github.com/huggingface/transformers/blob/main/examples/pytorch/image-classification/run_image_classification.py#L333-362), image preprocessing workflow before torchvision v2 is as follows:
   1. Convert input batch into numpy array (or keep it as PIL image for Timm's implementation)
   2. Resize (or RandomResizedCrop).
