@@ -6,8 +6,7 @@
 - Based on two most popular Vision Transformer implementations: [HuggingFace's implementation](https://github.com/huggingface/transformers/blob/v4.49.0/src/transformers/models/vit/image_processing_vit.py#L152-L283) and [Timm's implementation](https://github.com/huggingface/transformers/blob/main/examples/pytorch/image-classification/run_image_classification.py#L337-362), image preprocessing workflow before torchvision v2 is as follows:
   1. Resize/RandomResizedCrop PIL images/numpy array.
   2. RandomHorizontalFlip for Timm's implementation; Rescale for Huggingface's implementation.
-  3. Further augment images with TrivialAugmentWide, RandAugment (only for Timm's implementation).
-  5. Convert PIL image to torch tensor then rescale and normalise for Timm's implementation; rescale and normalise numpy array then convert to torch tensor for HuggingFace's implementation.
+  3. Convert PIL image to torch tensor then rescale and normalise for Timm's implementation; rescale and normalise numpy array then convert to torch tensor for HuggingFace's implementation.
     
 - Since torchvision v2, preprocessing tensor is much quicker than PIL images as stated [in torchvision documentation](https://pytorch.org/vision/main/transforms.html#performance-considerations). But not PIL images but also quicker than numpy array as someone had experimented [here](https://app.semanticdiff.com/gh/huggingface/transformers/pull/28847/overview). Comparing [torchvision v2's implementation](https://github.com/huggingface/transformers/blob/main/src/transformers/image_processing_utils_fast.py#L668-743) to either implementations above, the workflow has changed into:
   1. Convert input batch into tensor
