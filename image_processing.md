@@ -3,7 +3,7 @@
 - [ ] Modify your transforms.Compose to use torchvision v2 instead of torchvision v1.
   
 # Why adapt toward torchvision v2 
-- Based on two most popular Vision Transformer implementations: [HuggingFace's implementation](https://github.com/huggingface/transformers/blob/v4.49.0/src/transformers/models/vit/image_processing_vit.py#L152-L283) and [Timm's implementation](https://github.com/huggingface/transformers/blob/main/examples/pytorch/image-classification/run_image_classification.py#L337-362), image preprocessing workflow before torchvision v2 is as follows:
+- From 2 most popular ViT implementations: [HuggingFace's implementation](https://github.com/huggingface/transformers/blob/v4.49.0/src/transformers/models/vit/image_processing_vit.py#L152-L283) and [Timm's implementation](https://github.com/huggingface/transformers/blob/main/examples/pytorch/image-classification/run_image_classification.py#L337-L362), image preprocessing workflow before torchvision v2 is as follows:
   1. Resize/RandomResizedCrop PIL images/numpy array.
   2. RandomHorizontalFlip for Timm's implementation; Rescale for Huggingface's implementation.
   3. Convert PIL image to torch tensor then rescale and normalise for Timm's implementation; rescale and normalise numpy array then convert to torch tensor for HuggingFace's implementation.
