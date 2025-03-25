@@ -1,6 +1,6 @@
-# Tools that speedups image processing:
+# Tools that speedups image processing (x means have personally tested):
 - [ ] Use Dataset.map(batched=True). See performance boost [here](https://huggingface.co/learn/nlp-course/en/chapter5/3?fw=pt#the-map-methods-superpowers) (0scroll down to see table). But you need to use num_proc and set batched=True in map(), otherwise it will be slower than default set_transform() [as reported here](https://discuss.huggingface.co/t/using-map-take-7-2x-times-longer-than-set-transform/62285).
-- [ ] Adapt torchvision v2 manually using image_processing.ipynb as the first stepping stone. Yes you will get speedup over ViTImageProcessorFast on HuggingFace depsite their implementation also base on torchvision v2.
+- [x] Adapt torchvision v2 manually using image_processing.ipynb as the first stepping stone. Yes you will get speedup over ViTImageProcessorFast on HuggingFace depsite their implementation also base on torchvision v2.
 - [ ] Use TorchAug with num_chunks=1 to deal with any random data augmentation (like RandomResizedCrop) where you are forced to loop through each image in a batch. Based on [TorchAug speed benchmark](https://github.com/juliendenize/torchaug/blob/main/docs/source/include/speed_comparison.md) and given that([HuggingFace is still looping through each sample in a batch](https://github.com/huggingface/transformers/blob/main/src/transformers/image_processing_utils_fast.py#L721-L738), you can already gain 3.58x speedup over HuggingFace's ViTImageProcessingFast just for using TorchAug's RandomResizedCrop alone. A little sidenote, kornia also claims to have speedup like TorchAug, [which is entirely false claim](https://github.com/kornia/kornia/issues/1559).
   
 # Why adapt torchvision v2 
