@@ -4,7 +4,7 @@
 - [x] Use TorchAug transform(num_chunks=1, batch_transform=True) to deal with any random data augmentation (like RandomResizedCrop) where you are forced to loop through each image in a batch. Having tested, couldn't make it work as despite having batch_transform advantage on paper, TorchAug not only causes massive tensor discrepancy but also slower than torchvision v1 (see in image_processing.ipynb). Unfortunately, TorchAug's authors have archived their project so I will be on my own tryna fix this problem.
 - [x] Kornia also claims to have speedup like TorchAug, [which is entirely false claim](https://github.com/kornia/kornia/issues/1559).
 - [x] Save random augmented dataset as batch tensor, mostly to avoid dealing with random data augmentation again when we inevitably rerun another model training.
-- [ ] [HuggingFace's ViTImageProcessorFast](https://app.semanticdiff.com/gh/huggingface/transformers/pull/28847/overview). Use this as baseline for speedup benchmark.
+- [ ] HuggingFace's ViTImageProcessorFast. Follow [their guide](https://app.semanticdiff.com/gh/huggingface/transformers/pull/28847/overview) but adapt to our batch size = 256 and using PyTorch benchmark instead of pythonic time module.
 - [ ] Hyperparameters-wise, use figure 4 in [How to train your ViT? Data, Augmentation, and Regularization in Vision Transformers](https://arxiv.org/abs/2106.10270) paper as baseline to finetune ViT.
   
 # Findings from benchmark in image_processing.ipynb 
