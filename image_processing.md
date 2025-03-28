@@ -1,15 +1,15 @@
-# Tools that speedups image processing (x means have personally tested):
+# Tools and tricks that speedups image processing (x means have personally tested):
 - [ ] Use Dataset.map(batched=True). See performance boost [here](https://huggingface.co/learn/nlp-course/en/chapter5/3?fw=pt#the-map-methods-superpowers) (scroll down to see table). But you need to use num_proc and set batched=True in map(), otherwise it will be slower than default set_transform() [as reported here](https://discuss.huggingface.co/t/using-map-take-7-2x-times-longer-than-set-transform/62285).
 - [x] Adapt torchvision v2 manually using image_processing.ipynb as the first stepping stone. Yes you will get speedup over ViTImageProcessorFast on HuggingFace depsite their implementation also base on torchvision v2.
 - [x] Use TorchAug transform(num_chunks=1, batch_transform=True) to deal with any random data augmentation (like RandomResizedCrop) where you are forced to loop through each image in a batch. Having tested, couldn't make it work as despite having batch_transform advantage on paper, TorchAug not only causes massive tensor discrepancy but also slower than torchvision v1 (see in image_processing.ipynb). Unfortunately, TorchAug's authors have archived their project so I will be on my own tryna fix this problem.
 - [x] Kornia also claims to have speedup like TorchAug, [which is entirely false claim](https://github.com/kornia/kornia/issues/1559)
-- [ ] Save transformed dataset as batch tensor, so that we only do 1 image processing per project?
+- [ ] Save preprocessed dataset as batch tensor, mostly to avoid dealing with random data augmentation. Semi-test!
   
 # Why adapt torchvision v2 
 From my personal benchmark torchvision v2 vs torchvision v2 on vit-base-patch16-224's image preprocessing workflow I notice 2 things:
   1. While data augmentation functions are still more efficient to use them on PIL image than torch tensor, 0.2ms speedup per image.
   2. Most significant speedup is whenever you can employ v2.functional, >0.4ms speedup per image.
-  3. If these number looks small, scale it up by batch_size * num_training_iter * epochs like say 0.2 * 256 * (dataset_size/256) * 200. As your dataset size grows to the around millions as you want to train a new foundation model or finetune foundation model in a completely new domain. Yea, you easily looking at 33 GPU hours saved.
+  3. If these number looks small, scale it up by batch_size * num_training_iter like say 0.2 * 256 * (dataset_size/256) * 200. As your dataset size grows to the around millions as you want to train a new foundation model or finetune foundation model in a completely new domain. Yea, you easily looking at 33 GPU hours saved.
   4. It's very easy to adapt toward torchvision v2. The first time doing this I needed to spent hours digging at the source code of the 2 popular image processing implementation for vit-base-patch16-224 to makesure that I write down the correct workflow: [HuggingFace's VitImageProcessingFast](https://github.com/huggingface/transformers/blob/v4.49.0/src/transformers/models/vit/image_processing_vit.py#L152-L283) and [Timm's implementation](https://github.com/huggingface/transformers/blob/main/examples/pytorch/image-classification/run_image_classification.py#L337-L362); then reading [How to train your ViT? Data, Augmentation, and Regularization in Vision Transformers](https://arxiv.org/abs/2106.10270) paper to make sure I get the hyperparameters right. This is akin to "literature review". The coding itself is easy, just change `torch.transforms` -> `torch.transforms.v2` and use `torch.transforms.v2.functional` wherever I can. 
 
 # Reality-check
