@@ -3,7 +3,7 @@
 - [x] Adapt torchvision v2 manually using image_processing.ipynb as the first stepping stone. Yes you will get speedup over ViTImageProcessorFast on HuggingFace depsite their implementation also base on torchvision v2.
 - [x] Use TorchAug transform(num_chunks=1, batch_transform=True) to deal with any random data augmentation (like RandomResizedCrop) where you are forced to loop through each image in a batch. Having tested, couldn't make it work as despite having batch_transform advantage on paper, TorchAug not only causes massive tensor discrepancy but also slower than torchvision v1 (see in image_processing.ipynb). Unfortunately, TorchAug's authors have archived their project so I will be on my own tryna fix this problem.
 - [x] Kornia also claims to have speedup like TorchAug, [which is entirely false claim](https://github.com/kornia/kornia/issues/1559)
-- [ ] Save preprocessed dataset as batch tensor, mostly to avoid dealing with random data augmentation. Semi-test!
+- [x] Save preprocessed dataset as batch tensor, mostly to avoid dealing with random data augmentation.
   
 # Why adapt torchvision v2 
 From my personal benchmark torchvision v2 vs torchvision v2 on vit-base-patch16-224's image preprocessing workflow I notice 2 things:
